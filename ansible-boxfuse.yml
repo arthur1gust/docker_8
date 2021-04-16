@@ -78,7 +78,7 @@
 - name: deploy boxfuse to prod
   hosts: prod
   become: yes
-  
+
   tasks:
   - name: copy file.war
     copy:
