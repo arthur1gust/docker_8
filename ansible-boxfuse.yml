@@ -1,5 +1,5 @@
 ---
-- name: install git - build
+- name: install git, jdk, maven
   hosts: build
   become: yes
 
@@ -8,78 +8,53 @@
     apt:
       name: git
       update_cache: yes
-      
-- name: install jdk - build
-  hosts: build
-  become: yes
 
-  tasks:
   - name: install jdk package
     apt:
       name: default-jdk
       update_cache: yes
-      
-- name: install maven - build
-  hosts: build
-  become: yes
 
-  tasks:
   - name: install maven package
     apt:
       name: maven
       update_cache: yes
-      
-- name: install jdk - prod
-  hosts: prod
-  become: yes
 
-  tasks:
-  - name: install jdk package
-    apt:
-      name: default-jdk
-      update_cache: yes
-      
-- name: install tomcat - prod
-  hosts: prod
-  become: yes
-
-  tasks:
-  - name: install tomcat package
-    apt:
-      name: tomcat9
-      update_cache: yes
-      
-- name: clone project boxfuse - build
-  hosts: build
-  become: no
-
-  tasks:
   - name: git clone project "boxfuse"
     git:
       repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
       dest: /usr/local/project
       clone: yes
-      
+	  
   - name: start mvn
     shell: "cd /usr/local/project/ &&  mvn clean install"
     become: yes
     register: project_result
-    
+
   - name: mvn result
     debug:
       var: project_result
-      
+
   - name: file.war to prod
     fetch:
       src: /usr/local/project/target/hello-1.0.war
       dest: /tmp/project/
       flat: yes
-      
-- name: deploy boxfuse to prod
+	  
+- name: install jdk, tomcat
   hosts: prod
   become: yes
 
   tasks:
+  - name: install jdk package
+    apt:
+      name: default-jdk
+      update_cache: yes
+
+  - name: install tomcat package
+    apt:
+      name: tomcat9
+      update_cache: yes
+
   - name: copy file.war
     copy:
       src: /tmp/project/hello-1.0.war
