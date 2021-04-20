@@ -24,7 +24,7 @@
       repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
       dest: /usr/local/project
       clone: yes
-	  
+
   - name: start mvn
     shell: "cd /usr/local/project/ &&  mvn clean install"
     become: yes
@@ -39,7 +39,7 @@
       src: /usr/local/project/target/hello-1.0.war
       dest: /tmp/project/
       flat: yes
-	  
+  
 - name: install jdk, tomcat
   hosts: prod
   become: yes
